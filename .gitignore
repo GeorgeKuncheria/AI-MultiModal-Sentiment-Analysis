@@ -1,0 +1,13 @@
+# Model Weights & Folders
+model/
+*.pth
+
+# Media Files
+*.mp4
+*.wav
+*.avi
+
+# System & IDE
+__pycache__/
+.DS_Store
+.vscode/
