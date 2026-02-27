@@ -19,3 +19,5 @@ sagemaker-train
 boto3==1.35.76
 soundfile==0.12.1
 openai-whisper
+nvgpu==0.10.0
+ffmpeg-python==0.2.0

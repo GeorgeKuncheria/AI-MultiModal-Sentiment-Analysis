@@ -9,6 +9,8 @@ import whisper
 from transformers import AutoTokenizer
 import sys
 import json
+import boto3
+import tempfile
 
 
 EMOTION_MAP = {0: "anger", 1: "disgust", 2: "fear",
@@ -217,11 +219,31 @@ class VideoUtteranceProcessor:
         return segment_path
 
 
+def download_from_s3(s3_uri):
+    s3_client= boto3.client("s3")
+    bucket = s3_uri.split("/")[2]
+    key = "/".join(s3_uri.split("/")[3:])
+
+    with tempfile.NamedTemporaryFile(delete=False , suffix=".mp4") as temp_file:
+        s3_client.download_file(bucket,key,temp_file.name)
+        return temp_file.name
+
+
+
+
 def input_fn(request_body,request_content_type):
     if request_content_type == 'application/json':
         input_data = json.loads(request_body)
+        s3_uri = input_data['video_path']
+        local_path = download_from_s3(s3_uri)
+        return {"video_path":local_path}
+    raise ValueError(f"Unsupported Content Type: {request_content_type}")
         
 
+def output_fn(prediction, response_content_type):
+    if response_content_type == "application/json":
+        return json.dumps(prediction)
+    raise ValueError(f"Unsupported content type: {response_content_type}")
 
 def model_fn(model_dir):
 
@@ -328,29 +350,29 @@ def predict_fn(input_data,model_dict):
     return {"utterances": predictions}
 
 
-def process_local_video(video_path,model_dir='model'):
-    model_dict = model_fn(model_dir)
+# def process_local_video(video_path,model_dir='model'):
+#     model_dict = model_fn(model_dir)
     
-    input_data = {'video_path':video_path}
+#     input_data = {'video_path':video_path}
 
-    predictions = predict_fn(input_data,model_dict)
+#     predictions = predict_fn(input_data,model_dict)
 
-    for utterance in predictions["utterances"]:
-        print("\nUtterance:")
-        print(f"""Start: {utterance['start_time']}s, End: {
-              utterance['end_time']}s""")
-        print(f"Text: {utterance['text']}")
-        print("\n Top Emotions:")
-        for emotion in utterance['emotions']:
-            print(f"{emotion['label']}: {emotion['confidence']:.2f}")
-        print("\n Top Sentiments:")
-        for sentiment in utterance['sentiments']:
-            print(f"{sentiment['label']}: {sentiment['confidence']:.2f}")
-        print("-"*50)
-
-
+#     for utterance in predictions["utterances"]:
+#         print("\nUtterance:")
+#         print(f"""Start: {utterance['start_time']}s, End: {
+#               utterance['end_time']}s""")
+#         print(f"Text: {utterance['text']}")
+#         print("\n Top Emotions:")
+#         for emotion in utterance['emotions']:
+#             print(f"{emotion['label']}: {emotion['confidence']:.2f}")
+#         print("\n Top Sentiments:")
+#         for sentiment in utterance['sentiments']:
+#             print(f"{sentiment['label']}: {sentiment['confidence']:.2f}")
+#         print("-"*50)
 
 
 
-if __name__ == "__main__":
-    process_local_video('./dia2_utt3.mp4')
+
+
+# if __name__ == "__main__":
+#     process_local_video('./dia2_utt3.mp4')
