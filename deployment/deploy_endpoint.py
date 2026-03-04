@@ -4,9 +4,9 @@ import sagemaker
 
 def deploy_enpoint():
     sagemaker.Session()
-    role = "arn:aws:iam::471112871413:role/sentiment-analysis-endpoint-role"
+    role = ""
 
-    model_uri = "s3://sentiment-analysis-saas-1227/inference/model.tar.gz"
+    model_uri = ""
 
     model= PyTorchModel(
         model_data=model_uri,
