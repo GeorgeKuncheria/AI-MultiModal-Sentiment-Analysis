@@ -164,6 +164,16 @@ Then open your browser and visit: [http://localhost:6006](http://localhost:6006)
 
 ---
 
+## 🌐 SaaS Application
+
+The full SaaS application built around this model — including the Next.js frontend, API key management, usage quotas, and SageMaker endpoint integration — is available in a separate repository:
+
+> 🔗 **[AI MultiModal Sentiment Analysis SaaS](https://github.com/GeorgeKuncheria/AI-MultiModal-Sentiment-Analysis-SAAS)**
+
+Clone and set it up alongside this repo to get the full end-to-end experience.
+
+---
+
 ## 🧰 Tech Stack
 
 **Model & Training**
@@ -178,6 +188,4 @@ Then open your browser and visit: [http://localhost:6006](http://localhost:6006)
 - Tailwind CSS — styling
 - Auth.js — user authentication
 - T3 Stack — full-stack foundation
-
----
 
