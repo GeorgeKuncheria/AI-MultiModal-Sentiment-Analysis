@@ -181,6 +181,3 @@ Then open your browser and visit: [http://localhost:6006](http://localhost:6006)
 
 ---
 
-## 📄 License
-
-This project is open source. See [LICENSE](./LICENSE) for details.
